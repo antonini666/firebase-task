@@ -32,8 +32,8 @@ const NavigationAuth = () => {
           </Link>
         </li>
         <li className="nav-item">
-          <Link to={ROUTES.ACCOUNT} className="nav-link text-white">
-            Account
+          <Link to={ROUTES.ADD} className="nav-link text-white">
+            Add
           </Link>
         </li>
       </ul>
