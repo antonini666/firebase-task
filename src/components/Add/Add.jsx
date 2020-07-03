@@ -4,49 +4,85 @@ import { withFirebase } from "../Firebase";
 import dateformat from "dateformat";
 
 const now = new Date();
-const date = dateformat(now, "yyyy-mm-dd");
+const date = dateformat(now, "yyyy-mm-dd'T'HH:MM");
+
+const INITIAL_STATE = {
+  title: "",
+  description: "",
+  price: "",
+  discount: "",
+  discountDate: null,
+  image: "",
+};
 
 const Add = ({ firebase }) => {
-  const [image, setImage] = useState(null);
   const [loadImage, setLoadImage] = useState(false);
+  const [itemData, setItemData] = useState(INITIAL_STATE);
+  const [imageSize, setImageSize] = useState(false);
 
-  console.log(loadImage);
-  
+  const onChange = (event) => {
+    switch (event.target.name) {
+      case "title":
+        setItemData({ ...itemData, title: event.target.value });
+        break;
+      case "description":
+        setItemData({ ...itemData, description: event.target.value });
+        break;
+      case "price":
+        setItemData({ ...itemData, price: event.target.value });
+        break;
+      case "discount":
+        setItemData({ ...itemData, discount: event.target.value });
+        break;
+      case "discountDate":
+        setItemData({ ...itemData, discountDate: event.target.value });
+        break;
+      case "image":
+        const file = event.target.files[0];
 
-  const onChangeInput = (event) => {
-    const file = event.target.files[0];
+        if (file) {
+          const fileUrl = `${file.name.split(".")[0]}${Date.now()}.${
+            file.name.split(".")[1]
+          }`;
 
-    let fileUrl = `${file.name.split(".")[0]}${Date.now()}.${
-      file.name.split(".")[1]
-    }`;
+          const uploadTask = firebase.uploadImage(fileUrl).put(file);
 
-    const uploadTask = firebase.uploadImage(fileUrl).put(file);
-    uploadTask.on(
-      "state_changed",
-      (snapshot) => {
-        let progress = snapshot.bytesTransferred === snapshot.totalBytes;
-        console.log(progress);
-        
+          uploadTask.on(
+            "state_changed",
+            (snapshot) => {
+              let progress = snapshot.bytesTransferred === snapshot.totalBytes;
+              setLoadImage(progress);
+            },
+            (error) => console.log(error),
+            () => {
+              firebase
+                .downloadImage("images")
+                .child(fileUrl)
+                .getDownloadURL()
+                .then((url) => {
+                  setItemData({ ...itemData, image: url });
+                });
+            }
+          );
+        }
 
-        setLoadImage(progress);
-      },
-      (error) => console.log(error),
-      () => {
-        firebase
-          .downloadImage("images")
-          .child(fileUrl)
-          .getDownloadURL()
-          .then((url) => {
-            setImage(url);
-          });
-      }
-    );
+        break;
+      default:
+        break;
+    }
+  };
+
+  const onSubmit = () => {
+    firebase.items().push({
+      ...itemData,
+      createdAt: firebase.serverValue.TIMESTAMP,
+    });
   };
 
   return (
     <div>
       <h2 className="text-success pt-2">Add</h2>
-      <form>
+      <form onSubmit={onSubmit} className="mx-auto">
         <div className="mb-2">
           <label htmlFor="title" className="form-label">
             Product Title
@@ -55,7 +91,12 @@ const Add = ({ firebase }) => {
             type="text"
             className="form-control"
             id="title"
+            name="title"
             placeholder="Iphone 11 Pro Max"
+            onChange={onChange}
+            minLength="20"
+            maxLength="60"
+            required
           />
         </div>
         <div className="mb-2">
@@ -65,8 +106,10 @@ const Add = ({ firebase }) => {
           <textarea
             className="form-control"
             id="description"
+            name="description"
             rows="3"
             placeholder="Cool device"
+            onChange={onChange}
           />
         </div>
         <div className="mb-2">
@@ -77,40 +120,44 @@ const Add = ({ firebase }) => {
             type="number"
             className="form-control"
             id="price"
+            name="price"
             placeholder="999.99$"
-            min="0.1"
+            min="0.01"
             max="99999999.99"
-            step="0.1"
+            step="0.01"
             autoComplete="off"
             required
+            onChange={onChange}
           />
         </div>
         <div className="mb-2">
-          <label htmlFor="sale" className="form-label">
-            Sale
+          <label htmlFor="discount" className="form-label">
+            Discount
           </label>
           <input
             type="number"
             className="form-control"
-            id="sale"
+            id="discount"
+            name="discount"
             placeholder="10$"
-            min="0.1"
-            max="99999999.99"
-            step="0.1"
+            min="10"
+            max="90"
+            step="1"
             autoComplete="off"
-            required
+            onChange={onChange}
           />
         </div>
         <div className="mb-2">
-          <label htmlFor="date" className="form-label">
-            Sale
+          <label htmlFor="discountDate" className="form-label">
+            Discount time
           </label>
           <input
-            type="date"
+            type="datetime-local"
             className="form-control"
-            id="date"
+            id="discountDate"
+            name="discountDate"
             min={date}
-            required
+            onChange={onChange}
           />
         </div>
         <div className="form-file">
@@ -119,14 +166,28 @@ const Add = ({ firebase }) => {
           </label>
           <input
             type="file"
-            className="form-control"
+            className={`form-control ${imageSize ? `is-valid` : `is-invalid`}`}
             id="file"
-            accept="image/x-png,image/gif,image/jpeg"
-            onChange={onChangeInput}
+            name="image"
+            accept="image/*"
+            required
+            onChange={onChange}
           />
-          {image ? <img src={image} alt="upload_image" height="100px" /> : null}
+          <div className="invalid-feedback">
+            Image must be minimum width / height = 200px, maximum 4000px
+          </div>
+          {itemData.image ? (
+            <img
+              src={itemData.image}
+              alt="upload_image"
+              height="100px"
+              className="m-2"
+            />
+          ) : null}
         </div>
-        <button type="submit">Send</button>
+        <button type="submit" className="btn btn-success mt-3">
+          Add item
+        </button>
       </form>
     </div>
   );

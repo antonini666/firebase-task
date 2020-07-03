@@ -5,7 +5,6 @@ import { withFirebase } from "../Firebase";
 const HomeContainer = ({ firebase }) => {
   const [loading, setLoading] = useState(true);
   const [items, setItems] = useState([]);
-  // const [text, setText] = useState("");
 
   useEffect(() => {
     firebase.items().on("value", (snapshot) => {
@@ -32,35 +31,7 @@ const HomeContainer = ({ firebase }) => {
     firebase.item(uid).remove();
   };
 
-  // const onChangeText = (event) => {
-  //   setText(event.target.value);
-  // };
-
-  // const onCreateItems = (event) => {
-  //   if (text.trim().length > 0)
-  //     firebase.items().push({
-  //       text,
-  //       createdAt: firebase.serverValue.TIMESTAMP,
-  //     });
-
-  //   setText("");
-
-  //   event.preventDefault();
-  // };
-
-  
-
-  // const onEditMessage = (item, text) => {
-  //   const { uid, ...itemSnapshot } = item;
-
-  //   firebase.item(item.uid).set({
-  //     ...itemSnapshot,
-  //     text,
-  //     editedAt: firebase.serverValue.TIMESTAMP,
-  //   });
-  // };
-
-  return <Home items={items} loading={loading} onRemoveItem={onRemoveItem}/>;
+  return <Home items={items} loading={loading} onRemoveItem={onRemoveItem} />;
 };
 
 export default withFirebase(HomeContainer);
