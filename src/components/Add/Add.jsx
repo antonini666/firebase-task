@@ -166,7 +166,7 @@ const Add = ({ firebase }) => {
           </label>
           <input
             type="file"
-            className={`form-control ${imageSize ? `is-valid` : `is-invalid`}`}
+            className={`form-control`}
             id="file"
             name="image"
             accept="image/*"
