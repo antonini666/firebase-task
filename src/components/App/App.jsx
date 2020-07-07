@@ -7,7 +7,7 @@ import SignUpPage from "../SignUp";
 import SignInPage from "../SignIn/SignIn";
 import PasswordForgetPage from "../PasswordForget";
 import HomePage from "../Home";
-import AddPage from "../Add/Add";
+import AddPage from "../Add/";
 import * as ROUTES from "../../constants/routes";
 import { withAuthentication } from "../Session";
 

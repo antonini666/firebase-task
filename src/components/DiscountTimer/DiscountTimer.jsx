@@ -17,9 +17,7 @@ const DiscountTimer = ({ discountDates }) => {
     if (difference > 0) {
       timeLeft = {
         d: correctValueFormat(Math.floor(difference / (1000 * 60 * 60 * 24))),
-        h: correctValueFormat(
-          Math.floor((difference / (1000 * 60 * 60)) % 24)
-        ),
+        h: correctValueFormat(Math.floor((difference / (1000 * 60 * 60)) % 24)),
         m: correctValueFormat(Math.floor((difference / 1000 / 60) % 60)),
       };
     }

@@ -1,3 +1,3 @@
-import Add from "./Add";
+import AddContainer from "./AddContainer";
 
-export default Add;
+export default AddContainer;

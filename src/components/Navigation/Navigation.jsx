@@ -1,13 +1,11 @@
-import React, { useContext } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
+import { connect } from "react-redux";
 
 import SignOutButton from "../SignOut";
 import * as ROUTES from "../../constants/routes";
-import { AuthUserContext } from "../Session";
 
-const Navigation = () => {
-  const authUser = useContext(AuthUserContext);
-
+const Navigation = ({ authUser }) => {
   return (
     <div className="container">
       <div className="d-flex justify-content-between pb-3 pt-3">
@@ -65,4 +63,8 @@ const NavigationNonAuth = () => (
   </React.Fragment>
 );
 
-export default Navigation;
+const mapStateToProps = (state) => ({
+  authUser: state.auth.authUser,
+});
+
+export default connect(mapStateToProps)(Navigation);

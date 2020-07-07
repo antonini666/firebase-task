@@ -7,10 +7,10 @@
 .card {
   width: 300px;
   margin: 10px;
-  padding: 10px;
   box-shadow: 6px 6px 17px 4px #bdbdbd;
   border: none;
   transition: 0.5s;
+  word-break: break-word;
 
   &:hover {
     transform: scale(1.01);
@@ -27,11 +27,11 @@
   &-img {
     height: 180px;
     object-fit: contain;
+    padding: 10px;
   }
 
   &-title {
     text-align: center;
-    height: 85px;
   }
 
   &-bottom {

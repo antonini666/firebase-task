@@ -1,20 +1,23 @@
 import React, { useState } from "react";
-
-import { withRouter, Link } from "react-router-dom";
 import { compose } from "recompose";
+
+import { Link, Redirect } from "react-router-dom";
 import { withFirebase } from "../Firebase";
 import * as ROUTES from "../../constants/routes";
 import "./SignIn.scss";
+import { connect } from "react-redux";
 
-const SignInPage = () => (
-  <div className="container">
-    <h1 className="login-title text-center text-success">
-      Log in with your email account
-    </h1>
-    <SignInForm />
-    <SignUpLink />
-  </div>
-);
+const SignInPage = ({ authUser }) => {
+  return (
+    <div className="container">
+      <h1 className="login-title text-center text-success">
+        Log in with your email account
+      </h1>
+      <SignInForm />
+      <SignUpLink />
+    </div>
+  );
+};
 
 const SignUpLink = () => (
   <p className="col-md-6 mx-auto text-right pt-2">
@@ -27,7 +30,7 @@ const INITIAL_STATE = {
   password: "",
 };
 
-const SignInFormBase = ({ firebase, history }) => {
+const SignInFormBase = ({ firebase, authUser }) => {
   const [userData, setUserData] = useState(INITIAL_STATE);
   const [error, setError] = useState(null);
 
@@ -39,7 +42,6 @@ const SignInFormBase = ({ firebase, history }) => {
       .then((authUser) => {
         setUserData(INITIAL_STATE);
         setError(null);
-        history.push(ROUTES.HOME);
       })
       .catch((error) => {
         setError(error);
@@ -53,6 +55,10 @@ const SignInFormBase = ({ firebase, history }) => {
   const onChange = (event) => {
     setUserData({ ...userData, [event.target.name]: event.target.value });
   };
+
+  if (authUser) {
+    return <Redirect to={ROUTES.HOME} />;
+  }
 
   return (
     <form onSubmit={onSubmit} className="mx-auto col-md-6">
@@ -77,7 +83,11 @@ const SignInFormBase = ({ firebase, history }) => {
         />
       </div>
 
-      <button disabled={isInvalid} type="submit" className="btn btn-success btn-block">
+      <button
+        disabled={isInvalid}
+        type="submit"
+        className="btn btn-success btn-block"
+      >
         Sign In
       </button>
 
@@ -86,7 +96,14 @@ const SignInFormBase = ({ firebase, history }) => {
   );
 };
 
-const SignInForm = compose(withRouter, withFirebase)(SignInFormBase);
+const mapStateToProps = (state) => ({
+  authUser: state.auth.authUser,
+});
+
+const SignInForm = compose(
+  withFirebase,
+  connect(mapStateToProps)
+)(SignInFormBase);
 
 export default SignInPage;
 
