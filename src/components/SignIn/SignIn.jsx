@@ -10,7 +10,7 @@ import { connect } from "react-redux";
 const SignInPage = ({ authUser }) => {
   return (
     <div className="container">
-      <h1 className="login-title text-center text-success">
+      <h1 className="login-title text-center text-dark">
         Log in with your email account
       </h1>
       <SignInForm />
@@ -86,7 +86,7 @@ const SignInFormBase = ({ firebase, authUser }) => {
       <button
         disabled={isInvalid}
         type="submit"
-        className="btn btn-success btn-block"
+        className="btn btn-dark btn-block"
       >
         Sign In
       </button>

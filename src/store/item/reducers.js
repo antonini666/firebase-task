@@ -8,6 +8,7 @@ const initialState = {
     discount: "",
     discountDate: "",
     image: "",
+    hello: "",
   },
 };
 
@@ -15,7 +16,6 @@ export const itemReducer = (state = initialState, action) => {
   switch (action.type) {
     case ITEM_SET:
       return {
-        ...state,
         item: action.payload,
       };
     default:

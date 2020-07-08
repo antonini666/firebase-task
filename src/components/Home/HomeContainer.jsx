@@ -1,15 +1,17 @@
 import React, { useState, useEffect } from "react";
-
-import Home from "./Home";
-import { withFirebase } from "../Firebase";
 import { Redirect } from "react-router-dom";
-import * as ROUTES from "../../constants/routes";
 import { compose } from "recompose";
 import { connect } from "react-redux";
 
-const HomeContainer = ({ firebase, authUser }) => {
+import Home from "./Home";
+import { withFirebase } from "../Firebase";
+import * as ROUTES from "../../constants/routes";
+import { setListItems } from "../../store/listItems/actions";
+
+const HomeContainer = ({ firebase, authUser, setListItems, list }) => {
   const [loading, setLoading] = useState(true);
-  const [items, setItems] = useState([]);
+
+  console.log(list);
 
   useEffect(() => {
     firebase.items().on("value", (snapshot) => {
@@ -20,17 +22,20 @@ const HomeContainer = ({ firebase, authUser }) => {
           ...itemObject[key],
           uid: key,
         }));
-        setItems(itemList);
+
+        console.log(itemList);
+
+        setListItems(itemList);
         setLoading(false);
       } else {
-        setItems(null);
+        setListItems(null);
         setLoading(false);
       }
     });
     return () => {
       firebase.items().off();
     };
-  }, [firebase]);
+  }, [firebase, setListItems]);
 
   const onRemoveItem = (uid) => {
     firebase.item(uid).remove();
@@ -40,11 +45,19 @@ const HomeContainer = ({ firebase, authUser }) => {
     return <Redirect to={ROUTES.SIGN_IN} />;
   }
 
-  return <Home items={items} loading={loading} onRemoveItem={onRemoveItem} />;
+  return <Home items={list} loading={loading} onRemoveItem={onRemoveItem} />;
 };
 
 const mapStateToProps = (state) => ({
   authUser: state.auth.authUser,
+  list: state.list.list,
 });
 
-export default compose(withFirebase, connect(mapStateToProps))(HomeContainer);
+const mapDispatchToProps = {
+  setListItems,
+};
+
+export default compose(
+  withFirebase,
+  connect(mapStateToProps, mapDispatchToProps)
+)(HomeContainer);

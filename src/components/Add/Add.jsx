@@ -1,5 +1,7 @@
 import React from "react";
 
+import "./Add.scss";
+
 const Add = ({
   item,
   handleSubmit,
@@ -9,11 +11,8 @@ const Add = ({
   date,
   errorCount,
 }) => {
-  console.log(errorCount(fieldErrors));
-
   return (
-    <div>
-      <h2 className="text-success pt-2">Add</h2>
+    <div className="add">
       <form onSubmit={handleSubmit} className="mx-auto col-md-8">
         <div className="mb-2">
           <label htmlFor="title" className="form-label">
@@ -24,6 +23,7 @@ const Add = ({
             className={`form-control ${errorClass(fieldErrors.title)}`}
             id="title"
             name="title"
+            value={item.title}
             placeholder="Iphone 11 Pro Max"
             onChange={handleChange}
             required
@@ -90,7 +90,7 @@ const Add = ({
             id="discountDate"
             name="discountDate"
             min={date}
-            disabled={item.discount ? false : true}
+            disabled={item.discount.length === 0 ? true : false}
             onChange={handleChange}
             required
           />
@@ -121,7 +121,7 @@ const Add = ({
         </div>
         <button
           type="submit"
-          className="btn btn-success mt-3"
+          className="btn btn-dark mt-3"
           disabled={!errorCount(fieldErrors)}
         >
           Add item

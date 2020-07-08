@@ -11,11 +11,13 @@ import AddPage from "../Add/";
 import * as ROUTES from "../../constants/routes";
 import { withAuthentication } from "../Session";
 
+import "./App.scss"
+
 const App = () => {
   return (
     <Router>
       <React.Fragment>
-        <div className="bg-success">
+        <div className="bg-dark bg-shadow">
           <Navigation />
         </div>
 
@@ -26,6 +28,7 @@ const App = () => {
           <Route path={ROUTES.PASSWORD_FORGET} component={PasswordForgetPage} />
           <Route path={ROUTES.HOME} component={HomePage} />
           <Route path={ROUTES.ADD} component={AddPage} />
+          <Route path={ROUTES.EDIT} component={AddPage} />
         </div>
       </React.Fragment>
     </Router>

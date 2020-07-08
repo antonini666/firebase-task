@@ -17,7 +17,7 @@ const SignUpPage = ({
 }) => {
   return (
     <div className="container">
-      <h1 className="registration-title text-center text-success">Create your account</h1>
+      <h1 className="registration-title text-center text-dark">Create your account</h1>
       <form onSubmit={onSubmit} className="mx-auto col-md-6">
         <div className="form-group mb-3">
           <input
@@ -87,7 +87,7 @@ const SignUpPage = ({
         <button
           type="submit"
           disabled={formValid ? false : true}
-          className="btn btn-success btn-block"
+          className="btn btn-dark btn-block"
         >
           Sign Up
         </button>

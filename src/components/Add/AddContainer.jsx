@@ -16,7 +16,7 @@ const initialErrorState = {
   image: "",
 };
 
-const AddContainer = ({ firebase, authUser, item, setItem }) => {
+const AddContainer = ({ firebase, authUser, item, setItem, location }) => {
   const [fieldErrors, setFieldErrors] = useState(initialErrorState);
   const [date, setDate] = useState(
     dateformat(new Date(), "yyyy-mm-dd'T'HH:MM")
@@ -32,9 +32,9 @@ const AddContainer = ({ firebase, authUser, item, setItem }) => {
   const handleChange = (event) => {
     switch (event.target.name) {
       case "title":
-        const title = event.target.value.replace(/\s+/g, " ").trim();
+        const title = event.target.value.trim();
+        setItem({ ...item, title: title });
         if (title.length >= 20 && title.length <= 60) {
-          setItem({ ...item, title: title });
           setFieldErrors({
             ...fieldErrors,
             title: "",
@@ -48,10 +48,8 @@ const AddContainer = ({ firebase, authUser, item, setItem }) => {
         break;
       case "description":
         const description = event.target.value.replace(/\s+/g, " ").trim();
-        console.log(description);
-
+        setItem({ ...item, description: description });
         if (description.length <= 200) {
-          setItem({ ...item, description: description });
           setFieldErrors({
             ...fieldErrors,
             description: "",
@@ -86,7 +84,7 @@ const AddContainer = ({ firebase, authUser, item, setItem }) => {
           uploadTask.on(
             "state_changed",
             (snapshot) => {},
-            (error) => console.log(error),
+            (error) => error,
             () => {
               firebase
                 .downloadImage("images")

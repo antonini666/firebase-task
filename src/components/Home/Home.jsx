@@ -1,12 +1,13 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 import DiscountTimer from "../DiscountTimer";
+import * as ROUTES from "../../constants/routes";
 import "./Home.scss";
 
 const Home = ({ items, loading, onRemoveItem }) => {
   return (
-    <div>
-      <h2 className="text-success pt-2">Home</h2>
+    <div className="home">
       <React.Fragment>
         {loading && <div>Loading ...</div>}
 
@@ -48,7 +49,10 @@ const Item = ({ item, onRemoveItem }) => {
 
   return (
     <div className="card">
-      <img src={image} alt="" width="100%" className="card-img" />
+      <div className="card-img">
+        <img src={image} alt="" width="100%" />
+      </div>
+
       <div className="card-body justify-between">
         <div className="d-flex flex-column text-center">
           <h5 className="card-title">{title}</h5>
@@ -71,7 +75,15 @@ const Item = ({ item, onRemoveItem }) => {
             )}
           </div>
           <div className="btn-wrap">
-            <button className="btn btn-outline-primary">Edit</button>
+            <Link
+              to={{
+                pathname: `${ROUTES.EDIT}/${uid}`,
+                editItem: item,
+              }}
+              className="btn btn-outline-primary"
+            >
+              Edit
+            </Link>
 
             <button
               className="btn btn-outline-danger"
