@@ -1,8 +1,8 @@
 import React from "react";
 
-import "./Add.scss";
+import "./AddItem.scss";
 
-const Add = ({
+const AddItem = ({
   item,
   handleSubmit,
   handleChange,
@@ -10,7 +10,8 @@ const Add = ({
   fieldErrors,
   date,
   errorCount,
-}) => {
+}) => {  
+
   return (
     <div className="add">
       <form onSubmit={handleSubmit} className="mx-auto col-md-8">
@@ -38,6 +39,7 @@ const Add = ({
             className={`form-control ${errorClass(fieldErrors.description)}`}
             id="description"
             name="description"
+            value={item.description}
             rows="3"
             placeholder="Cool device"
             onChange={handleChange}
@@ -53,6 +55,7 @@ const Add = ({
             className="form-control"
             id="price"
             name="price"
+            value={item.price}
             placeholder="999.99$"
             min="0.01"
             max="99999999.99"
@@ -71,6 +74,7 @@ const Add = ({
             className="form-control"
             id="discount"
             name="discount"
+            value={item.discount}
             placeholder="15%"
             min="10"
             max="90"
@@ -89,6 +93,7 @@ const Add = ({
             className="form-control"
             id="discountDate"
             name="discountDate"
+            value={item.discountDate}
             min={date}
             disabled={item.discount.length === 0 ? true : false}
             onChange={handleChange}
@@ -131,4 +136,4 @@ const Add = ({
   );
 };
 
-export default Add;
+export default AddItem;

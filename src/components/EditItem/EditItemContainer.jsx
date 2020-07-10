@@ -7,7 +7,7 @@ import { Redirect } from "react-router-dom";
 import { withFirebase } from "../Firebase";
 import * as ROUTES from "../../constants/routes";
 import { setItem } from "../../store/item/actions";
-import Add from "./Add";
+import EditItem from "./EditItem";
 
 const initialErrorState = {
   title: "",
@@ -16,15 +16,18 @@ const initialErrorState = {
   image: "",
 };
 
-const AddContainer = ({ firebase, authUser, item, setItem, location }) => {
+const EditItemContainer = ({ firebase, authUser, item, setItem, location }) => {
   const [fieldErrors, setFieldErrors] = useState(initialErrorState);
   const [date, setDate] = useState(
     dateformat(new Date(), "yyyy-mm-dd'T'HH:MM")
   );
 
+  const editId = location.pathname.slice(6);
+
   useEffect(() => {
-    const timer = setInterval(() =>
-      setDate(dateformat(new Date(), "yyyy-mm-dd'T'HH:MM"))
+    const timer = setInterval(
+      () => setDate(dateformat(new Date(), "yyyy-mm-dd'T'HH:MM")),
+      2000
     );
     return () => clearInterval(timer);
   });
@@ -104,9 +107,9 @@ const AddContainer = ({ firebase, authUser, item, setItem, location }) => {
   };
 
   const handleSubmit = () => {
-    firebase.items().push({
+    firebase.item(editId).set({
       ...item,
-      createdAt: firebase.serverValue.TIMESTAMP,
+      editedAt: firebase.serverValue.TIMESTAMP,
     });
   };
 
@@ -123,7 +126,7 @@ const AddContainer = ({ firebase, authUser, item, setItem, location }) => {
   }
 
   return (
-    <Add
+    <EditItem
       item={item}
       handleSubmit={handleSubmit}
       handleChange={handleChange}
@@ -138,6 +141,7 @@ const AddContainer = ({ firebase, authUser, item, setItem, location }) => {
 const mapStateToProps = (state) => ({
   authUser: state.auth.authUser,
   item: state.item.item,
+  list: state.list.list,
 });
 
 const mapDispatchToProps = {
@@ -147,4 +151,4 @@ const mapDispatchToProps = {
 export default compose(
   withFirebase,
   connect(mapStateToProps, mapDispatchToProps)
-)(AddContainer);
+)(EditItemContainer);

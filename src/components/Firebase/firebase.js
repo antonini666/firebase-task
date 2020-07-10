@@ -45,6 +45,7 @@ class Firebase {
   uploadImage = (url) => this.storage.ref(`images/${url}`);
 
   downloadImage = (name) => this.storage.ref(name);
+  
 }
 
 export default Firebase;

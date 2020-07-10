@@ -6,20 +6,20 @@ import { withFirebase } from "../Firebase";
 
 const withAuthentication = (Component) => {
   const WithAuthentication = (props) => {
-    props.setAuthUser(JSON.parse(localStorage.getItem("authUser")));
+    props.setAuthUser(JSON.parse(sessionStorage.getItem("authUser")));
 
     useEffect(() => {
       const listener = props.firebase.auth.onAuthStateChanged(
         (authUser) => {
-          localStorage.setItem("authUser", JSON.stringify(authUser));
+          sessionStorage.setItem("authUser", JSON.stringify(authUser));
           props.setAuthUser(authUser);
         },
         () => {
-          localStorage.removeItem("authUser");
+          sessionStorage.removeItem("authUser");
           props.setAuthUser(null);
         }
       );
-      return listener;
+      return () => listener();
     }, [props]);
     return <Component {...props} />;
   };

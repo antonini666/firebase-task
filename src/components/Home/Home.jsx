@@ -5,12 +5,10 @@ import DiscountTimer from "../DiscountTimer";
 import * as ROUTES from "../../constants/routes";
 import "./Home.scss";
 
-const Home = ({ items, loading, onRemoveItem }) => {
+const Home = ({ items, onRemoveItem }) => {
   return (
     <div className="home">
       <React.Fragment>
-        {loading && <div>Loading ...</div>}
-
         {items ? (
           <ItemList items={items} onRemoveItem={onRemoveItem} />
         ) : (

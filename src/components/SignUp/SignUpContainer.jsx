@@ -32,11 +32,15 @@ const SignUpContainer = ({ firebase, history }) => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    if (Object.values(errors).includes(false)) {
-      return setFormValid(false);
-    } else {
-      return setFormValid(true);
-    }
+    const listener = () => {
+      if (Object.values(errors).includes(false)) {
+        return setFormValid(false);
+      } else {
+        return setFormValid(true);
+      }
+    };
+
+    return () => listener();
   }, [errors]);
 
   const { username, email, passwordOne, passwordTwo } = userData;

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { Redirect } from "react-router-dom";
 import { compose } from "recompose";
 import { connect } from "react-redux";
@@ -9,10 +9,6 @@ import * as ROUTES from "../../constants/routes";
 import { setListItems } from "../../store/listItems/actions";
 
 const HomeContainer = ({ firebase, authUser, setListItems, list }) => {
-  const [loading, setLoading] = useState(true);
-
-  console.log(list);
-
   useEffect(() => {
     firebase.items().on("value", (snapshot) => {
       const itemObject = snapshot.val();
@@ -22,14 +18,9 @@ const HomeContainer = ({ firebase, authUser, setListItems, list }) => {
           ...itemObject[key],
           uid: key,
         }));
-
-        console.log(itemList);
-
         setListItems(itemList);
-        setLoading(false);
       } else {
         setListItems(null);
-        setLoading(false);
       }
     });
     return () => {
@@ -45,7 +36,7 @@ const HomeContainer = ({ firebase, authUser, setListItems, list }) => {
     return <Redirect to={ROUTES.SIGN_IN} />;
   }
 
-  return <Home items={list} loading={loading} onRemoveItem={onRemoveItem} />;
+  return <Home items={list} onRemoveItem={onRemoveItem} />;
 };
 
 const mapStateToProps = (state) => ({
